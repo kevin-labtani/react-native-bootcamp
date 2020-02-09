@@ -1,4 +1,4 @@
-# Learning React.js
+# Learning React Native
 
 ## Présentation du Projet
 
