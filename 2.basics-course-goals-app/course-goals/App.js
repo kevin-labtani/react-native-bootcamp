@@ -6,7 +6,8 @@ import {
   TextInput,
   Button,
   ScrollView,
-  FlatList
+  FlatList,
+  ClippingRectangle
 } from "react-native";
 
 import GoalItem from "./components/GoalItem";
@@ -20,7 +21,7 @@ export default function App() {
     // rather than setCourseGoals([...courseGoals, enteredGoal]);
     setCourseGoals(currentGoals => [
       ...currentGoals,
-      { key: Math.random().toString(), value: goalTitle }
+      { id: Math.random().toString(), value: goalTitle }
     ]);
   };
 
@@ -30,8 +31,14 @@ export default function App() {
       {/* need to use flatlist as default view isn't scrollable
         scrollview renders the entire element at once, flatlist doesn't */}
       <FlatList
+        keyExtractor={item => item.id}
         data={courseGoals}
-        renderItem={({ item }) => <GoalItem title={item.value} />}
+        renderItem={({ item }) => (
+          <GoalItem
+            onDelete={() => console.log("does it work")}
+            title={item.value}
+          />
+        )}
       />
     </View>
   );

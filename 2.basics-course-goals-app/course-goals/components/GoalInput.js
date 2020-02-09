@@ -4,7 +4,7 @@ import { View, TextInput, Button, StyleSheet } from "react-native";
 const GoalInput = props => {
   const [enteredGoal, setEnteredGoal] = useState("");
 
-  const goatInputHandler = enteredText => {
+  const goalInputHandler = enteredText => {
     setEnteredGoal(enteredText);
   };
 
@@ -14,7 +14,7 @@ const GoalInput = props => {
       <TextInput
         placeholder="Course Goals"
         style={styles.textInput}
-        onChangeText={goatInputHandler}
+        onChangeText={goalInputHandler}
         value={enteredGoal}
       />
       <Button title="ADD" onPress={() => props.onAddGoal(enteredGoal)} />
