@@ -10,45 +10,29 @@ import {
 } from "react-native";
 
 import GoalItem from "./components/GoalItem";
+import GoalInput from "./components/GoalInput";
 
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState("");
   const [courseGoals, setCourseGoals] = useState([]);
 
-  const goatInputHandler = enteredText => {
-    setEnteredGoal(enteredText);
-  };
-
-  const addGoalHandler = () => {
+  const addGoalHandler = goalTitle => {
     // pass in a function to make sure coursegoals are up to date
     // rather than setCourseGoals([...courseGoals, enteredGoal]);
     setCourseGoals(currentGoals => [
       ...currentGoals,
-      { key: Math.random().toString(), value: enteredGoal }
+      { key: Math.random().toString(), value: goalTitle }
     ]);
   };
 
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        {/* onchanetext execute on every keystroke */}
-        <TextInput
-          placeholder="Course Goals"
-          style={styles.textInput}
-          onChangeText={goatInputHandler}
-          value={enteredGoal}
-        />
-        <Button title="ADD" onPress={addGoalHandler} />
-      </View>
-      <View>
-        {/* wrap text in a view cuz view give us access to more styling choices
-        need to use flatlist as default view isn't scrollable
+      <GoalInput onAddGoal={addGoalHandler} />
+      {/* need to use flatlist as default view isn't scrollable
         scrollview renders the entire element at once, flatlist doesn't */}
-        <FlatList
-          data={courseGoals}
-          renderItem={({ item }) => <GoalItem title={item.value} />}
-        />
-      </View>
+      <FlatList
+        data={courseGoals}
+        renderItem={({ item }) => <GoalItem title={item.value} />}
+      />
     </View>
   );
 }
@@ -56,16 +40,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     padding: 50
-  },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  textInput: {
-    width: 200,
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10
   }
 });
