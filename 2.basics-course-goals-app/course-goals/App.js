@@ -9,6 +9,8 @@ import {
   FlatList
 } from "react-native";
 
+import GoalItem from "./components/GoalItem";
+
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState("");
   const [courseGoals, setCourseGoals] = useState([]);
@@ -44,11 +46,7 @@ export default function App() {
         scrollview renders the entire element at once, flatlist doesn't */}
         <FlatList
           data={courseGoals}
-          renderItem={({ item }) => (
-            <View style={styles.listItem}>
-              <Text>{item.value}</Text>
-            </View>
-          )}
+          renderItem={({ item }) => <GoalItem title={item.value} />}
         />
       </View>
     </View>
@@ -69,12 +67,5 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     padding: 10
-  },
-  listItem: {
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: "#ccc",
-    borderColor: "black",
-    borderWidth: 1
   }
 });
