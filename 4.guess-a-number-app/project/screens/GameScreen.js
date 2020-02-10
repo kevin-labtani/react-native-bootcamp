@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, Button, Alert } from "react-native";
 
 import NumberContainer from "../components/NumberContainer";
@@ -20,16 +20,27 @@ const GameScreen = props => {
   const [currentGuess, setCurrentGuess] = useState(
     generateRandomBetween(1, 100, props.userChoice)
   );
+  const [rounds, setRounds] = useState(0);
 
   //If a component doesn't need to be updated with new data it's always best to avoid a re-render. That's the benefit of useRef over state
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
+  const { userChoice, onGameOver } = props;
+
+  // executed after every render cycle, check if the game is over
+  // the array as 2nd args is used to tell the hook to run only when one of those value change
+  useEffect(() => {
+    if (currentGuess === userChoice) {
+      onGameOver(rounds);
+    }
+  }, [currentGuess, userChoice, onGameOver]);
+
   const nextGuessHandler = direction => {
     if (
       // wrong hint
-      (direction === "lower" && currentGuess < props.userChoice) ||
-      (direction === "greater" && currentGuess > props.userChoice)
+      (direction === "lower" && currentGuess < userChoice) ||
+      (direction === "greater" && currentGuess > userChoice)
     ) {
       Alert.alert("Don't lie!", "You know that this is wrong", [
         {
@@ -52,6 +63,7 @@ const GameScreen = props => {
       currentGuess
     );
     setCurrentGuess(nextNumber);
+    setRounds(curRounds => curRounds + 1);
   };
 
   return (
