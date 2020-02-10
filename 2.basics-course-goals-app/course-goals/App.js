@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  ScrollView,
-  FlatList,
-  ClippingRectangle
-} from "react-native";
+import { StyleSheet, View, Button, FlatList } from "react-native";
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
@@ -16,10 +7,13 @@ import GoalInput from "./components/GoalInput";
 export default function App() {
   // array with all our coursegoals
   const [courseGoals, setCourseGoals] = useState([]);
-  // tracking addgoal modal
+  // tracking addgoal modal visibility
   const [isAddMode, setIsAddMode] = useState(false);
 
   const addGoalHandler = goalTitle => {
+    if (goalTitle.length === 0) {
+      return;
+    }
     // pass in a function to make sure coursegoals are up to date
     // rather than setCourseGoals([...courseGoals, enteredGoal]);
     setCourseGoals(currentGoals => [
@@ -28,7 +22,7 @@ export default function App() {
     ]);
     setIsAddMode(false);
     // nb: all state changes are applied at once and then react rerender the component
-  };
+  };r
 
   const removeGoalHandler = goalId => {
     setCourseGoals(currentGoals => {
