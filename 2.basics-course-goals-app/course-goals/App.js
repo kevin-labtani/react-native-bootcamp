@@ -26,6 +26,8 @@ export default function App() {
       ...currentGoals,
       { id: Math.random().toString(), value: goalTitle }
     ]);
+    setIsAddMode(false);
+    // nb: all state changes are applied at once and then react rerender the component
   };
 
   const removeGoalHandler = goalId => {
@@ -34,10 +36,18 @@ export default function App() {
     });
   };
 
+  const cancelGoalAdditionHandler = () => {
+    setIsAddMode(false);
+  };
+
   return (
     <View style={styles.screen}>
       <Button title="Add New Goal" onPress={() => setIsAddMode(true)} />
-      <GoalInput visible={isAddMode} onAddGoal={addGoalHandler} />
+      <GoalInput
+        visible={isAddMode}
+        onAddGoal={addGoalHandler}
+        onCancel={cancelGoalAdditionHandler}
+      />
       {/* need to use flatlist as default view isn't scrollable
         scrollview renders the entire element at once, flatlist doesn't */}
       <FlatList
