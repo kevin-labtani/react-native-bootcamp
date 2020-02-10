@@ -14,7 +14,9 @@ import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
 
 export default function App() {
+  // array with all our coursegoals
   const [courseGoals, setCourseGoals] = useState([]);
+  // tracking addgoal modal
   const [isAddMode, setIsAddMode] = useState(false);
 
   const addGoalHandler = goalTitle => {
