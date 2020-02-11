@@ -94,9 +94,10 @@ const GameScreen = props => {
         </MainButton>
       </Card>
       {/* wrap list inside a view to give it a width or height*/}
-      <View style={styles.list}>
+      <View style={styles.listContainer}>
         {/* view surrounding a scrollview need to be given scroll:1 style for the scroll to work */}
-        <ScrollView>
+        {/* special name for scrollview style prop */}
+        <ScrollView contentContainerStyle={styles.list}>
           {/* pass the map index to calculate the nr of guesses */}
           {pastGuesses.map((guess, index) =>
             renderListItem(guess, pastGuesses.length - index)
@@ -120,9 +121,14 @@ const styles = StyleSheet.create({
     width: 400,
     maxWidth: "90%"
   },
-  list: {
+  listContainer: {
     flex: 1,
     width: "80%"
+  },
+  list: {
+    flexGrow: 1, // w flex-end to make it scroll the way we want
+    alignItems: "center",
+    justifyContent: "flex-end"
   },
   listItem: {
     borderColor: "#ccc",
@@ -131,7 +137,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    width: "60%"
   }
 });
 
