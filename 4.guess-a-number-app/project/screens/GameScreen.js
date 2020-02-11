@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  FlatList
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import NumberContainer from "../components/NumberContainer";
@@ -20,17 +27,19 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
-const renderListItem = (value, numOfRound) => (
-  <View key={value} style={styles.listItem}>
-    <BodyText>#{numOfRound}</BodyText>
-    <BodyText>{value}</BodyText>
+// itemData is the default arg auto passed in by react
+// key handled bu react thanks to flatlist
+const renderListItem = (listLength, itemData) => (
+  <View style={styles.listItem}>
+    <BodyText>#{listLength - itemData.index}</BodyText>
+    <BodyText>{itemData.item}</BodyText>
   </View>
 );
 
 const GameScreen = props => {
   const initialGuess = generateRandomBetween(1, 100, props.userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
-  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
 
   //If a component doesn't need to be updated with new data it's always best to avoid a re-render. That's the benefit of useRef over state
   const currentLow = useRef(1);
@@ -77,7 +86,10 @@ const GameScreen = props => {
     setCurrentGuess(nextNumber);
 
     // currentGuess wouldn't work because react won't have updated the sate and rebuilt the componenet yet, so we use nextNumber
-    setPastGuesses(curPastGuesses => [nextNumber, ...curPastGuesses]);
+    setPastGuesses(curPastGuesses => [
+      nextNumber.toString(),
+      ...curPastGuesses
+    ]);
   };
 
   return (
@@ -97,12 +109,19 @@ const GameScreen = props => {
       <View style={styles.listContainer}>
         {/* view surrounding a scrollview need to be given scroll:1 style for the scroll to work */}
         {/* special name for scrollview style prop */}
-        <ScrollView contentContainerStyle={styles.list}>
-          {/* pass the map index to calculate the nr of guesses */}
+        {/* pass the map index to calculate the nr of guesses */}
+        {/* <ScrollView contentContainerStyle={styles.list}>
           {pastGuesses.map((guess, index) =>
             renderListItem(guess, pastGuesses.length - index)
           )}
-        </ScrollView>
+        </ScrollView> */}
+        {/* same with flatlist */}
+        <FlatList
+          keyExtractor={item => item}
+          data={pastGuesses}
+          renderItem={renderListItem.bind(this, pastGuesses.length)}
+          contentContainerStyle={styles.list}
+        />
       </View>
     </View>
   );
@@ -123,11 +142,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    width: "80%"
+    width: "60%"
   },
   list: {
     flexGrow: 1, // w flex-end to make it scroll the way we want
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "flex-end"
   },
   listItem: {
@@ -138,7 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "60%"
+    width: "100%"
   }
 });
 
