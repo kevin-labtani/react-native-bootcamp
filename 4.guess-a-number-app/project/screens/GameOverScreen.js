@@ -10,7 +10,10 @@ const GameOverScreen = props => {
       <TitleText>The Game is Over!</TitleText>
       <View style={styles.imageContainer}>
         <Image
+          // local nb: no need to set width and height if already perfectly sized
           source={require("../assets/success.png")}
+          // web nb: need to set width and height in StyleSheet
+          // source={{ uri: "https://i.picsum.photos/id/866/500/500.jpg" }}
           style={styles.image}
           resizeMode="cover" // default
         />
