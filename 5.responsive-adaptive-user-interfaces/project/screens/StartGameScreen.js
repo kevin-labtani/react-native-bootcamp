@@ -28,8 +28,8 @@ const StartGameScreen = props => {
     Dimensions.get("window").width / 4
   );
 
+  // update dimensions when we switch layout from/to landscape
   useEffect(() => {
-    // update dimensions when we switch layout from/to landscape
     const updateLayout = () => {
       setButtonWidth(Dimensions.get("window").width / 4);
     };

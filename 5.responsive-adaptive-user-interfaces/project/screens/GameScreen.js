@@ -41,12 +41,31 @@ const GameScreen = props => {
   const initialGuess = generateRandomBetween(1, 100, props.userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
 
   //If a component doesn't need to be updated with new data it's always best to avoid a re-render. That's the benefit of useRef over state
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
   const { userChoice, onGameOver } = props;
+
+  // update dimensions when we switch layout from/to landscape
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableDeviceWidth(Dimensions.get("window").width);
+      setAvailableDeviceHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
 
   // executed after every render cycle, check if the game is over
   // the array as 2nd args is used to tell the hook to run only when one of those value change
@@ -96,8 +115,36 @@ const GameScreen = props => {
   // can instead create 2 different styles objects and put the condition up before we return jsx
   // just anothe roption for conditional styling
   let listContainerStyle = styles.listContainer;
-  if (Dimensions.get("window").width < 350) {
+  if (availableDeviceWidth < 350) {
     listContainer = styles.listContainerBig;
+  }
+
+  // return different layout if in landscape
+  if (availableDeviceHeight < 500) {
+    return (
+      <View style={styles.screen}>
+        {/* style with DefaultStyles (global styles) or switch to TitleText (style component), up to us */}
+        <Text style={DefaultStyles.title}>Opponent's Guess</Text>
+        <View style={styles.controls}>
+          <MainButton onPress={nextGuessHandler.bind(this, "lower")}>
+            <Ionicons name="md-remove" size={24} color="white" />
+          </MainButton>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <MainButton onPress={nextGuessHandler.bind(this, "greater")}>
+            <Ionicons name="md-add" size={24} color="white" />
+          </MainButton>
+        </View>
+        {/* wrap list inside a view to give it a width or height*/}
+        <View style={listContainerStyle}>
+          <FlatList
+            keyExtractor={item => item}
+            data={pastGuesses}
+            renderItem={renderListItem.bind(this, pastGuesses.length)}
+            contentContainerStyle={styles.list}
+          />
+        </View>
+      </View>
+    );
   }
 
   return (
@@ -115,15 +162,6 @@ const GameScreen = props => {
       </Card>
       {/* wrap list inside a view to give it a width or height*/}
       <View style={listContainerStyle}>
-        {/* view surrounding a scrollview need to be given scroll:1 style for the scroll to work */}
-        {/* special name for scrollview style prop */}
-        {/* pass the map index to calculate the nr of guesses */}
-        {/* <ScrollView contentContainerStyle={styles.list}>
-          {pastGuesses.map((guess, index) =>
-            renderListItem(guess, pastGuesses.length - index)
-          )}
-        </ScrollView> */}
-        {/* same with flatlist */}
         <FlatList
           keyExtractor={item => item}
           data={pastGuesses}
@@ -147,6 +185,12 @@ const styles = StyleSheet.create({
     marginTop: Dimensions.get("window").height > 600 ? 20 : 5,
     width: 400,
     maxWidth: "90%"
+  },
+  controls: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "80%"
   },
   listContainer: {
     flex: 1,
