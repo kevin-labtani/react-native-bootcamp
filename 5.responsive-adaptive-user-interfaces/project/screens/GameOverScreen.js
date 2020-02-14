@@ -48,13 +48,15 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    paddingVertical: 10
   },
   image: {
     width: "100%",
     height: "100%"
   },
   imageContainer: {
+    // could replace the dimensions math here with hooks and event listener s liek we did on the other pages, as right now the math is based on orientation when we start the app
     width: Dimensions.get("window").width * 0.7,
     height: Dimensions.get("window").width * 0.7,
     borderRadius: (Dimensions.get("window").width * 0.7) / 2,
