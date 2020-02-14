@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
-  FlatList
+  FlatList,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -92,6 +93,13 @@ const GameScreen = props => {
     ]);
   };
 
+  // can instead create 2 different styles objects and put the condition up before we return jsx
+  // just anothe roption for conditional styling
+  let listContainerStyle = styles.listContainer;
+  if (Dimensions.get("window").width < 350) {
+    listContainer = styles.listContainerBig;
+  }
+
   return (
     <View style={styles.screen}>
       {/* style with DefaultStyles (global styles) or switch to TitleText (style component), up to us */}
@@ -106,7 +114,7 @@ const GameScreen = props => {
         </MainButton>
       </Card>
       {/* wrap list inside a view to give it a width or height*/}
-      <View style={styles.listContainer}>
+      <View style={listContainerStyle}>
         {/* view surrounding a scrollview need to be given scroll:1 style for the scroll to work */}
         {/* special name for scrollview style prop */}
         {/* pass the map index to calculate the nr of guesses */}
@@ -136,13 +144,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    marginTop: Dimensions.get("window").height > 600 ? 20 : 5,
     width: 400,
     maxWidth: "90%"
   },
   listContainer: {
     flex: 1,
     width: "60%"
+  },
+  listContainerBig: {
+    flex: 1,
+    width: "80%"
   },
   list: {
     flexGrow: 1, // w flex-end to make it scroll the way we want
